@@ -1,15 +1,20 @@
 package ru.practicum.dinner;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Random;
+import java.util.List;
 
 public class Main {
 
     static DinnerConstructor dc;
     static Scanner scanner;
+    static Random random;
 
     public static void main(String[] args) {
         dc = new DinnerConstructor();
         scanner = new Scanner(System.in);
+        random = new Random();
 
         while (true) {
             printMenu();
@@ -40,7 +45,9 @@ public class Main {
         String dishType = scanner.nextLine();
         System.out.println("Введите название блюда:");
         String dishName = scanner.nextLine();
-
+        dc.addDish(dishType, dishName);
+        System.out.println("Блюдо успешно добавлено");
+        System.out.println();
         // добавьте новое блюдо
     }
 
@@ -50,16 +57,28 @@ public class Main {
         System.out.println("Введите количество наборов, которые нужно сгенерировать:");
         int numberOfCombos = scanner.nextInt();
         scanner.nextLine();
-
+        List<String> types = new ArrayList<>();
         System.out.println("Вводите типы блюда, разделяя символом переноса строки (enter). Для завершения ввода введите пустую строку");
         String nextItem = scanner.nextLine();
 
         //реализуйте ввод типов блюд
         while (!nextItem.isEmpty()) {
-
+            types.add(nextItem);
+            nextItem = scanner.nextLine();
         }
-
-        // сгенерируйте комбинации блюд и выведите на экран
-
+        for (int i = 0; i < numberOfCombos; i++) {
+            System.out.println("Комбинация " + (i + 1) + ":");
+            for (String type : types) {
+                List<String> dishesOfType = dc.getDishesByType(type);
+                if (dishesOfType.isEmpty()) {
+                    System.out.println("Блюда типа " + type + " отсутствуют.");
+                } else {
+                    int randomIndex = random.nextInt(dishesOfType.size());
+                    String randomDish = dishesOfType.get(randomIndex);
+                    System.out.println("- " + randomDish);
+                }
+            }
+            System.out.println();
+        }
     }
 }
